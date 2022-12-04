@@ -146,7 +146,7 @@ app.post(
 const returnToken = (user, res) => {
   const payload = {
     team: {
-      id: user.id
+      id: team.id
     }
   };
 
@@ -186,12 +186,12 @@ app.post(
     } else {
       const { title, body } = req.body;
       try {
-        // Get the user who created the post
-        const user = await User.findById(req.user.id);
+        // Get the team who created the post
+        const team = await team.findById(req.team.id);
 
         // Create a new post
         const post = new Post({
-          user: user.id,
+          team: team.id,
           title: title,
           body: body
         });
@@ -257,8 +257,8 @@ app.delete('/api/posts/:id', auth, async (req, res) => {
     }
 
     // Make sure the request user created the post
-    if (post.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: 'User not authorized' });
+    if (post.team.toString() !== req.team.id) {
+      return res.status(401).json({ msg: 'team not authorized' });
     }
 
     await post.remove();
@@ -284,8 +284,8 @@ app.put('/api/posts/:id', auth, async (req, res) => {
       return res.status(404).json({ msg: 'Post not found' });
     }
 
-    // Make sure the request user created the post
-    if (post.user.toString() !== req.user.id) {
+    // Make sure the request team created the post
+    if (post.team.toString() !== req.team.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
