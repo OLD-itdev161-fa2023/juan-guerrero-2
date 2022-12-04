@@ -13,8 +13,8 @@ const Register = () => {
 
   const onChange = e => {
     const { name, value } = e.target;
-    setUserData({
-      ...userData,
+    setteamData({
+      ...teamData,
       [name]: value
     })
   }
@@ -24,7 +24,7 @@ const Register = () => {
       console.log('Players numbers do not match');
     }
     else {
-      const newUser = {
+      const newteam = {
         name: name,
         city: city,
         players: players
@@ -37,7 +37,7 @@ const Register = () => {
           }
         }
 
-        const body = JSON.stringify(newUser);
+        const body = JSON.stringify(newteam);
         const res = await axios.post('http://localhost:5000/api/users', body, config);
         console.log(res.data);
       } catch (error) {
