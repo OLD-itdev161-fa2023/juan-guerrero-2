@@ -5,7 +5,7 @@ import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import User from './models/User';
+import team from './models/team';
 import Post from './models/Post';
 import auth from './middleware/auth';
 
@@ -39,42 +39,42 @@ app.get('/api/', (req, res) => res.send('http get request sent to api'));
  * @desc Register user
  */
 app.post(
-  '/api/users',
+  '/api/team',
   [
-    check('name', 'Please enter your name')
+    check('name', 'Please enter your name of soccer team')
       .not()
       .isEmpty(),
-    check('email', 'Please enter a valid email').isEmail(),
+    check('city', 'Please enter city of soccer team').isEmail(),
     check(
-      'password',
-      'Please enter a password with 6 or more characters'
-    ).isLength({ min: 6 })
+      'players',
+      'Please enter number of players, must be at least 13'
+    ).isLength({ min: 13})
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     } else {
-      const { name, email, password } = req.body;
+      const { name, city, players } = req.body;
       try {
         // Check if user exists
-        let user = await User.findOne({ email: email });
-        if (user) {
+        let team = await team.findOne({ name: name });
+        if (team) {
           return res
             .status(400)
-            .json({ errors: [{ msg: 'User already exists' }] });
+            .json({ errors: [{ msg: 'try again' }] });
         }
 
         // Create a new user
-        user = new User({
+        team = new team({
           name: name,
-          email: email,
-          password: password
+          city: city,
+          players: players
         });
 
         // Encrypt the password
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
+        user.players = await bcrypt.hash(players, salt);
 
         // Save to the db and return
         await user.save();
@@ -90,12 +90,12 @@ app.post(
 
 /**
  * @route GET api/auth
- * @desc Authorize user
+ * @desc Authorize team registration
  */
 app.get('/api/auth', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    res.status(200).json(user);
+    const team = await team.findById(req.team.id);
+    res.status(200).json(team);
   } catch (error) {
     res.status(500).send('Unknown server error');
   }
@@ -103,35 +103,35 @@ app.get('/api/auth', auth, async (req, res) => {
 
 /**
  * @route POST api/login
- * @desc Login user
+ * @desc team registration 
  */
 app.post(
-  '/api/login',
+  '/api/registration',
   [
-    check('email', 'Please enter a valid email').isEmail(),
-    check('password', 'A password is required').exists()
+    check('name', 'Please enter other name , it already exist').exists(),
+    check('players', 'Eenter valid number of players, min 13 ').NotValid()
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     } else {
-      const { email, password } = req.body;
+      const { name, players } = req.body;
       try {
-        // Check if user exists
-        let user = await User.findOne({ email: email });
-        if (!user) {
+        // Check if team name exists
+        let team = await team.findOne({ name: name });
+        if (!team) {
           return res
             .status(400)
-            .json({ errors: [{ msg: 'Invalid email or password' }] });
+            .json({ errors: [{ msg: 'Invalid team name' }] });
         }
 
-        // Check password
-        const match = await bcrypt.compare(password, user.password);
+        // Check number of players 
+        const match = await bcrypt.compare(players, user.players);
         if (!match) {
           return res
             .status(400)
-            .json({ errors: [{ msg: 'Invalid email or password' }] });
+            .json({ errors: [{ msg: 'Invalid number of players' }] });
         }
 
         // Generate and return a JWT token
@@ -145,7 +145,7 @@ app.post(
 
 const returnToken = (user, res) => {
   const payload = {
-    user: {
+    team: {
       id: user.id
     }
   };
