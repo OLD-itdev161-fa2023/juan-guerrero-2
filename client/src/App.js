@@ -80,7 +80,7 @@ class App extends React.Component {
   }
 
   render() {
-    let { user, data } = this.state;
+    let { team, data } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     }
@@ -93,9 +93,9 @@ class App extends React.Component {
         <div className="App">
           <header className="App-header">
 <<<<<<< HEAD
-            <h1>GoodThings</h1>
+            <h1>Soccer Team Registration</h1>
 =======
-            <h1>Good Things</h1>
+            <h1>Soccer Team Registration</h1>
 >>>>>>> 5eb85bbcc2e8cfca167f20140bbab19bb5114c5a
             <ul>
               <li>
@@ -108,7 +108,7 @@ class App extends React.Component {
               <li>
                 {user ? 
                   <Link to="" onClick={this.logOut}>Log out</Link> :
-                  <Link to="/login">Log in</Link> 
+                  <Link to="/team">Log in</Link> 
                 }
                 
 =======
@@ -117,7 +117,7 @@ class App extends React.Component {
               <li>
                 {user ?
                   <Link to="" onClick={this.logOut}>Log out</Link> :
-                  <Link to="/Login">Log in</Link>
+                  <Link to="/Team">Log in</Link>
                 }
 >>>>>>> 5eb85bbcc2e8cfca167f20140bbab19bb5114c5a
               </li>
@@ -143,11 +143,11 @@ class App extends React.Component {
             </Route>
             <Switch>
               <Route 
-                exact path="/register" 
+                exact path="/Register" 
                 render={() => <Register {...authProps} />} />
               <Route 
-                exact path="/login" 
-                render={() => <Login {...authProps} />} />
+                exact path="/Team" 
+                render={() => <team {...authProps} />} />
             </Switch>
           </main>
 =======
@@ -158,7 +158,7 @@ class App extends React.Component {
                 exact path="/Register"
                 render={() => <Register {...authProps} />} />
               <Route
-                exact path="/Login"
+                exact path="/Team"
                 render={() => <Login {...authProps} />} />
             </Switch>
           </main>
