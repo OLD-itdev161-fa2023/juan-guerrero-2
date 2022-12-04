@@ -44,7 +44,7 @@ app.post(
     check('name', 'Please enter your name of soccer team')
       .not()
       .isEmpty(),
-    check('city', 'Please enter city of soccer team').isEmail(),
+    check('city', 'Please enter city of soccer team').isCity(),
     check(
       'players',
       'Please enter number of players, must be at least 13'
@@ -77,7 +77,7 @@ app.post(
         user.players = await bcrypt.hash(players, salt);
 
         // Save to the db and return
-        await user.save();
+        await team.save();
 
         // Generate and return a JWT token
         returnToken(user, res);
