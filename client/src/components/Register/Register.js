@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import axios from 'axios';
 
 const Register = () => {
-  const [userData, setUserData] = useState({
+  const [teamData, setteamData] = useState({
     name: '',
-    email: '',
-    password: '',
-    passwordConfirm: ''
+    city: '',
+    players: '',
+    playersConfirm: ''
   });
 
-  const { name, email, password, passwordConfirm } = userData;
+  const { name, city, players, playersConfirm } = teamData;
 
   const onChange = e => {
     const { name, value } = e.target;
@@ -20,14 +20,14 @@ const Register = () => {
   }
 
   const register = async () => {
-    if (password !== passwordConfirm) {
-      console.log('Passwords do not match');
+    if (players !== playersConfirm) {
+      console.log('Players numbers do not match');
     }
     else {
       const newUser = {
         name: name,
-        email: email,
-        password: password
+        city: city,
+        players: players
       }
 
       try {
@@ -61,25 +61,25 @@ const Register = () => {
       <div>
         <input 
           type="text" 
-          placeholder="Email" 
-          name="email" 
-          value={email} 
+          placeholder="City" 
+          name="city" 
+          value={city} 
           onChange={e => onChange(e)} />
       </div>
       <div>
         <input 
           type="text" 
-          placeholder="Password" 
-          name="password" 
-          value={password} 
+          placeholder="Players" 
+          name="players" 
+          value={players} 
           onChange={e => onChange(e)} />
       </div>
       <div>
         <input 
           type="text" 
-          placeholder="Confirm Password" 
-          name="passwordConfirm" 
-          value={passwordConfirm} 
+          placeholder="Confirm number of players" 
+          name="playersConfirm" 
+          value={playersConfirm} 
           onChange={e => onChange(e)} />
       </div>
       <div>
